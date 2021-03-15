@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: gateway #name of the application
+
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+
+zuul:
+  sensitive-headers:
+  routes:
+    product:
+      path: /api/product/**
+      serviceId: product
+      stripPrefix: false
+      url: http://localhost:8084
+    payment:
+      path: /api/payment/**
+      serviceId: payment
+      stripPrefix: false
+      url: http://localhost:8083
+
+#zuul:
+#  ignoredServices: '*'
+#  host:
+#    connect-timeout-millis: 60000
+#    socket-timeout-millis: 60000
+#  routes:
+#    payment:
+#      path: /api/payment/v1/**
+#      serviceId: payment
+#      stripPrefix: false
+#      sensitiveHeaders:
+#      url: http://localhost:8080/api/payment/v1
+#    product:
+#      path: /api/product/v1/**
+#      url: http://localhost:8084
+#      stripPrefix: false
+#      serviceId: product
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka #where our registry server is located
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000000
+          strategy: THREAD
+
+#            hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds= 1000000
+#            hystrix.command.default.execution.isolation.strategy= THREAD
+ribbon:
+  ConnectTimeout: 60000
+  ReadTimeout: 60000
